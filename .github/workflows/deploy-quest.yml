@@ -29,7 +29,16 @@ jobs:
       - name: Build Quest
         run: npm run build
 
+      - name: Upload Pages artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: |
+            index.html
+            assets
+            dist
+
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          publish_dir: .
+          artifact_name: github-pages
