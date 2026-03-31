@@ -8,7 +8,7 @@ export class DataProcessor {
         };
     }
     static processName(name) {
-        return name.trim().replace(/\s+/g, ' ').substring(0, 50);
+        return name.trim().replace(/\s+/g, ' ').replace(/\//g, '-').substring(0, 50);
     }
     static processPhone(phone) {
         return phone.replace(/[^0-9]/g, '');
@@ -28,13 +28,13 @@ export class DataProcessor {
     static validate(data) {
         const errors = [];
         if (!data.name)
-            errors.push('이름이 비어있습니다.');
+            errors.push('이름이 비어 있습니다.');
         if (!data.phone)
-            errors.push('연락처가 비어있습니다.');
+            errors.push('연락처가 비어 있습니다.');
         if (!data.subject)
-            errors.push('주제가 비어있습니다.');
+            errors.push('주제가 비어 있습니다.');
         if (!data.message)
-            errors.push('요청사항이 비어있습니다.');
+            errors.push('추가 요청사항이 비어 있습니다.');
         return {
             isValid: errors.length === 0,
             errors,

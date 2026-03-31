@@ -7,7 +7,6 @@ import { FormManager } from './FormManager.js';
 import { EventManager } from './EventManager.js';
 import { ErrorDisplayManager } from './ErrorDisplayManager.js';
 import { SubmitHandler } from './SubmitHandler.js';
-
 export class UIManager {
     constructor() {
         this.formValidator = new FormValidator();
@@ -84,3 +83,4 @@ export class UIManager {
         this.scrollAnimationManager.destroy();
     }
 }
+//# sourceMappingURL=UIManager.js.map

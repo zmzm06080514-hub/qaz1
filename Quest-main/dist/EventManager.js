@@ -12,8 +12,10 @@ export class EventManager {
         modalOverlay?.addEventListener('click', (e) => onOverlayClick(e));
     }
     registerFormSubmitEvent(onSubmit) {
+        const form = document.getElementById('f-contact');
         const submitButton = document.getElementById('modal-submit');
-        submitButton?.addEventListener('click', onSubmit);
+        form?.addEventListener('submit', onSubmit);
+        submitButton?.addEventListener('click', () => form?.requestSubmit());
     }
     registerInputEvent(fieldId, onInput) {
         const field = document.getElementById(fieldId);

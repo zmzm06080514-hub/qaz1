@@ -1,16 +1,6 @@
 import type { FormDataInterface } from './types.js';
 import { DataProcessor } from './DataProcessor.js';
 
-interface FirebaseWindow extends Window {
-  appFirebase?: {
-    firestore: any;
-  };
-}
-
-declare global {
-  interface Window extends FirebaseWindow {}
-}
-
 export class SubmitHandler {
   private isSubmitting = false;
 
@@ -48,16 +38,9 @@ export class SubmitHandler {
       }
 
       const apiData = DataProcessor.toAPIFormat(data);
-      let response;
-
-      try {
-        console.debug('Firestore 저장 시도', apiData);
-        response = await this.sendToFirestore(apiData);
-        console.debug('Firestore 저장 성공', response);
-      } catch (firestoreError) {
-        console.warn('Firestore 저장 실패, 로컬 API로 전환합니다:', firestoreError);
-        response = await this.sendToAPI(apiData);
-      }
+      console.debug('Firestore 저장 시도', apiData);
+      const response = await this.sendToFirestore(apiData);
+      console.debug('Firestore 저장 성공', response);
 
       return {
         success: true,
@@ -79,10 +62,12 @@ export class SubmitHandler {
   private async sendToFirestore(data: FormDataInterface & { timestamp: string }): Promise<unknown> {
     const firestore = (window as any).appFirebase?.firestore;
     if (!firestore) {
-      throw new Error('Firebase Firestore가 초기화되지 않았습니다. window.appFirebase=', (window as any).appFirebase);
+      throw new Error('Firebase Firestore가 초기화되지 않았습니다.');
     }
 
-    const doc = await firestore.collection('submissions').add({
+    // Firestore 문서 ID는 랜덤(자동 생성)으로 둡니다.
+    // (중복 신청해도 새로운 문서로 추가됩니다.)
+    const doc = await firestore.collection('applications').add({
       ...data,
       createdAt: new Date().toISOString(),
     });
@@ -91,18 +76,6 @@ export class SubmitHandler {
       id: doc.id,
       ...data,
     };
-  }
-
-  private async sendToAPI(data: FormDataInterface & { timestamp: string }): Promise<unknown> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          id: Math.random().toString(36).substring(7),
-          timestamp: data.timestamp,
-          status: 'pending',
-        });
-      }, 1500);
-    });
   }
 
   public getMinSubmitInterval(): number {
