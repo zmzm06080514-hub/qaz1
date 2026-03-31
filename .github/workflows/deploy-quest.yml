@@ -25,13 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: Quest
 
       - name: Build Quest
         run: npm run build
-        working-directory: Quest
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          publish_dir: Quest
+          publish_dir: .
